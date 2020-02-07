@@ -3,7 +3,7 @@ import numpy as np
 import random
 
 
-# (-1, 2)
+# (1, 2)
 # 初始化原始种群
 def ori_popular(num):
     popular = []
@@ -17,9 +17,9 @@ def ori_popular(num):
 def encode(popular):  # popular应该是float类型的列表
     popular_gene = []
     for i in range(0, len(popular)):
-        data = int((popular[i] - (-1)) / 3 * 2 ** 18)  # 染色体序列为18bit
+        data = int((popular[i]-(-1)) / 3 * 2**18)  # 染色体序列为18bit
         bin_data = bin(data)  # 整形转换成二进制是以字符串的形式存在的
-        for j in range(len(bin_data) - 2, 18):  # 序列长度不足补0
+        for j in range(len(bin_data)-2, 18):  # 序列长度不足补0
             bin_data = bin_data[0:2] + '0' + bin_data[2:]
         popular_gene.append(bin_data)
     return popular_gene
@@ -29,8 +29,8 @@ def encode(popular):  # popular应该是float类型的列表
 def decode(popular_gene):
     fitness = []
     for i in range(len(popular_gene)):
-        x = (int(popular_gene[i], 2) / 2 ** 18) * 3 - 1
-        value = np.sin(10 * np.pi * x)              #目标函数在这！
+        x = (int(popular_gene[i], 2) / 2 ** 18) * 3 +1
+        value = np.sin(10*np.pi*x)/x            #目标函数在这！
         fitness.append(value)
     return fitness
 
@@ -101,7 +101,7 @@ if __name__ == '__main__':  # alt+enter
     ori_popular_gene = encode(ori_popular)  # 18位基因
     new_popular_gene = ori_popular_gene
     y = []
-    for i in range(100):  # 迭代次数。繁殖1000代
+    for i in range(1000):  # 迭代次数。繁殖100代
         new_popular_gene = choice_ex(new_popular_gene)  # 选择和交叉
         new_popular_gene = variation(new_popular_gene)  # 变异
         # 取当代所有个体适应度平均值
@@ -112,11 +112,15 @@ if __name__ == '__main__':  # alt+enter
         y.append(sum_new_fitness / len(new_fitness))
 
     # 画图
-    x = np.linspace(0, 100, 100)
+    x = np.linspace(0, 1000, 1000)
     fig = plt.figure()  # 相当于一个画板
     plt.title("Figure GA")
     plt.xlabel("iterators", size=14)
     plt.ylabel("fitness", size=14)
-    axis = fig.add_subplot(111)  # 坐标轴
-    axis.plot(x, y)
+    #axis = fig.add_subplot(111)  # 坐标轴
+    plt.plot(x, y)
     plt.show()
+    # a=np.linspace(1,2)
+    # b=np.sin(10 * np.pi * a)/a
+    # plt.plot(a,b)
+    # plt.show()
